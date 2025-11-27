@@ -1,5 +1,21 @@
+import logging
+import os
+
 from strands import Agent, tool
 from strands_tools import calculator, current_time  # type: ignore[import-untyped]
+
+# Configure logging with environment variable support
+log_level = os.getenv("LOG_LEVEL", "INFO").upper()
+
+# Sets the logging format and streams logs to stderr
+logging.basicConfig(
+    level=getattr(logging, log_level),
+    format="%(levelname)s | %(name)s | %(message)s",
+    handlers=[logging.StreamHandler()]
+)
+
+# Enables Strands debug log level
+logging.getLogger("strands").setLevel(log_level)
 
 
 # Define a custom tool as a Python function using the @tool decorator

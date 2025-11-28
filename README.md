@@ -8,6 +8,7 @@ Experimentation repo for Strands AI agents.
 strands-agent/
 ├── agent/           # Python 3.13 agent experiments
 │   └── README.md    # See agent/README.md for setup and usage
+├── .kiro/           # Kiro IDE configuration and steering rules
 └── cdk/             # (Future) TypeScript CDK for deployment
 ```
 
@@ -24,5 +25,6 @@ See [agent/README.md](agent/README.md) for detailed setup, usage, and developmen
 ## Future
 
 This repo will eventually include:
+
 - **agent/** - Python agent code and experiments
 - **cdk/** - TypeScript CDK infrastructure for deployment

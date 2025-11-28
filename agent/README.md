@@ -29,21 +29,33 @@ source .venv/bin/activate
 .venv\Scripts\activate
 ```
 
-2. Install dependencies:
+2. Configure environment variables (optional):
+
+```bash
+cp .env.example .env
+# Edit .env with your configuration
+```
+
+3. Install dependencies:
 
 **Development (includes testing/linting tools):**
+
 ```bash
 pip install -e ".[dev]"
 ```
 
 This installs:
-- `strands-agents` - Main dependency
+
+- `strands-agents` - Main agent framework
+- `strands-agents-tools` - Community tools library
+- `strands-agents-builder` - Development utilities
 - `pytest` - Testing framework
 - `mypy` - Type checker
 - `ruff` - Linter
 - `black` - Code formatter
 
 **Production (only main dependencies):**
+
 ```bash
 pip install .
 ```
@@ -57,6 +69,12 @@ Run the agent:
 ```bash
 python src/agent.py
 ```
+
+### Environment Variables
+
+- `LOG_LEVEL` - Control logging verbosity (default: `INFO`)
+  - Options: `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`
+  - Example: `LOG_LEVEL=DEBUG python src/agent.py`
 
 ## Development
 
@@ -99,6 +117,7 @@ pytest && mypy src/ && ruff check . && black --check .
 ## Tools Configuration
 
 Development tools are configured in `pyproject.toml`:
+
 - **Black**: Code formatting
 - **Ruff**: Linting
 - **Mypy**: Type checking

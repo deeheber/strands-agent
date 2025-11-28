@@ -8,8 +8,11 @@ strands-agent/
 │   ├── src/           # Source code
 │   ├── tests/         # Test files
 │   ├── .venv/         # Virtual environment (gitignored)
+│   ├── .env.example   # Environment variable template
 │   ├── pyproject.toml # Project config & dependencies
 │   └── README.md      # Agent-specific documentation
+├── .github/
+│   └── workflows/     # GitHub Actions CI/CD pipelines
 ├── .kiro/             # Kiro IDE configuration
 │   └── steering/      # AI assistant guidance documents
 └── README.md          # Root documentation

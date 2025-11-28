@@ -2,6 +2,8 @@
 
 Experimentation repo for Strands AI agents.
 
+The intention is to use this as a template repo starter for new projects using this toolset.
+
 ## Project Structure
 
 ```

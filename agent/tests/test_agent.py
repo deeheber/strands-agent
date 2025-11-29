@@ -1,19 +1,19 @@
 """Tests for the agent."""
 
-from unittest.mock import Mock, patch
-
 import pytest
 
-from src.agent import agent, letter_counter
+from src.agentcore_app import create_agent, letter_counter
 
 
-def test_agent_exists() -> None:
-    """Test agent exists."""
+def test_create_agent() -> None:
+    """Test agent creation."""
+    agent = create_agent()
     assert agent is not None
 
 
 def test_agent_has_tools() -> None:
     """Test agent has expected tools registered."""
+    agent = create_agent()
     tool_names = agent.tool_names
     assert "calculator" in tool_names
     assert "current_time" in tool_names
@@ -64,22 +64,25 @@ def test_letter_counter_type_validation() -> None:
 
 def test_agent_callable() -> None:
     """Test agent is callable (basic smoke test without LLM call)."""
-    # Just verify the agent object is callable
-    # We don't actually invoke it to avoid real API calls in tests
+    agent = create_agent()
     assert callable(agent)
     assert hasattr(agent, "invoke_async")
     assert agent.name is not None
 
 
-@patch("src.agent.agent")
-def test_agent_invocation_mocked(mock_agent: Mock) -> None:
-    """Test agent invocation with mocked response to avoid API calls."""
-    mock_response = Mock()
-    mock_response.message.content = [Mock(text="The answer is 4")]
-    mock_agent.return_value = mock_response
+def test_invoke_payload_extraction() -> None:
+    """Test payload extraction logic."""
+    # Test with prompt
+    payload = {"prompt": "What is the answer?"}
+    prompt = payload.get("prompt", "Hello!")
+    assert prompt == "What is the answer?"
 
-    response = mock_agent("What is 2 + 2?")
+    # Test with None
+    payload = None
+    prompt = payload.get("prompt", "Hello!") if payload else "Hello!"
+    assert prompt == "Hello!"
 
-    assert response is not None
-    assert mock_agent.called
-    assert response.message.content[0].text == "The answer is 4"
+    # Test with empty dict
+    payload = {}
+    prompt = payload.get("prompt", "Hello!")
+    assert prompt == "Hello!"

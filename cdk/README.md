@@ -1,14 +1,38 @@
-# Welcome to your CDK TypeScript project
+# CDK Infrastructure
 
-This is a blank project for CDK development with TypeScript.
+TypeScript CDK infrastructure for deploying Strands agents to AWS.
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+## Quick Start
 
-## Useful commands
+```bash
+npm install
+npm run build
+npm run cdk:deploy
+```
 
-- `npm run build` compile typescript to js
-- `npm run watch` watch for changes and compile
-- `npm run test` perform the jest unit tests
-- `npx cdk deploy` deploy this stack to your default AWS account/region
-- `npx cdk diff` compare deployed stack with current state
-- `npx cdk synth` emits the synthesized CloudFormation template
+## Prerequisites
+
+- Node.js 24 (from `.nvmrc`)
+- AWS CLI configured (`aws configure` or `AWS_PROFILE`)
+
+## Common Commands
+
+```bash
+# Development
+npm run build          # Compile TypeScript
+npm run watch          # Watch mode
+npm test               # Run tests
+
+# Code Quality
+npm run fix            # Auto-fix lint + format
+npm run check          # Check lint + format (CI)
+
+# Deployment
+npm run cdk:deploy     # Deploy stacks
+npm run cdk:diff       # Show changes
+npm run cdk:destroy    # Destroy stacks
+```
+
+## CI/CD
+
+Automated testing runs on every push/PR via `.github/workflows/cdk-ci.yml`

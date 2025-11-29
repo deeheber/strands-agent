@@ -1,4 +1,4 @@
-name: Test & Lint
+name: Agent CI
 
 on:
   push:
@@ -9,6 +9,9 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./agent
 
     steps:
       - uses: actions/checkout@v6
@@ -19,23 +22,18 @@ jobs:
           cache: "pip"
 
       - name: Install dependencies
-        working-directory: ./agent
         run: |
           python -m pip install --upgrade pip
           pip install -e ".[dev]"
 
       - name: Run tests
-        working-directory: ./agent
         run: pytest -v --tb=short
 
       - name: Type check with mypy
-        working-directory: ./agent
         run: mypy src/
 
       - name: Lint with ruff
-        working-directory: ./agent
         run: ruff check .
 
       - name: Check code formatting with black
-        working-directory: ./agent
         run: black --check .

@@ -11,8 +11,17 @@ strands-agent/
 │   ├── .env.example   # Environment variable template
 │   ├── pyproject.toml # Project config & dependencies
 │   └── README.md      # Agent-specific documentation
+├── cdk/                # TypeScript CDK infrastructure
+│   ├── bin/           # CDK app entry point
+│   ├── lib/           # Stack definitions
+│   ├── test/          # CDK tests
+│   ├── cdk.json       # CDK configuration
+│   ├── package.json   # Node dependencies and scripts
+│   └── README.md      # CDK-specific documentation
 ├── .github/
 │   └── workflows/     # GitHub Actions CI/CD pipelines
+│       ├── agent-ci.yml  # Python agent CI
+│       └── cdk-ci.yml    # CDK infrastructure CI
 ├── .kiro/             # Kiro IDE configuration
 │   └── steering/      # AI assistant guidance documents
 └── README.md          # Root documentation
@@ -59,14 +68,35 @@ strands-agent/
 - Default level: INFO
 - Format: `%(levelname)s | %(name)s | %(message)s`
 
+## CDK Directory (`cdk/`)
+
+### Infrastructure Code (`lib/`)
+
+- `strands-agent-stack.ts` - Main CDK stack definition
+- Stack files define AWS resources and their configurations
+
+### Entry Point (`bin/`)
+
+- `cdk.ts` - CDK app entry point
+- Validates AWS credentials and instantiates stacks
+
+### Tests (`test/`)
+
+- `cdk.test.ts` - CDK stack tests
+- Test files should validate synthesized CloudFormation templates
+
+### Configuration Files
+
+- `package.json` - Node dependencies and npm scripts
+- `tsconfig.json` - TypeScript compiler configuration (ES2023, strict mode)
+- `jest.config.ts` - Jest testing configuration
+- `eslint.config.mjs` - ESLint linting rules (flat config)
+- `.prettierrc` - Prettier formatting rules
+- `cdk.json` - CDK app configuration and feature flags
+
 ## CI/CD
 
 - GitHub Actions workflows in `.github/workflows/`
-- Automated testing, type checking, linting, and formatting on push/PR
-- Runs on Python 3.13 with all dev dependencies
-
-## Future Structure
-
-The repository will expand to include:
-
-- `cdk/` - TypeScript CDK infrastructure for deployment
+- **agent-ci.yml** - Python agent testing, type checking, linting, and formatting
+- **cdk-ci.yml** - CDK testing, type checking, linting, and formatting
+- Both run on every push/PR to main branch

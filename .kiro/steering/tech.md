@@ -69,7 +69,16 @@ All tool configurations are centralized in `agent/pyproject.toml`:
 
 ## CI/CD
 
-- **GitHub Actions** - Automated testing pipeline
-- Runs on every push/PR to main and develop branches
+### Agent CI
+
+- **GitHub Actions** - `.github/workflows/agent-ci.yml`
+- Runs on every push/PR to main branch
 - Validates: pytest, mypy, ruff, black
 - Uses Python 3.13 on Ubuntu with pip caching
+
+### CDK CI
+
+- **GitHub Actions** - `.github/workflows/cdk-ci.yml`
+- Runs on every push/PR to main branch
+- Validates: TypeScript compilation, Jest tests, ESLint, Prettier
+- Uses Node.js 24 (from `.nvmrc`) on Ubuntu with npm caching

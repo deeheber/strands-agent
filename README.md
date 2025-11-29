@@ -1,32 +1,36 @@
-# Strands Agent Experiments
+# Strands Agent Template
 
-Experimentation repo for Strands AI agents.
+Template repo for Strands AI agents. Intended to be used as a starter for new projects.
 
-The intention is to use this as a template repo starter for new projects using this toolset.
-
-## Project Structure
+## Structure
 
 ```
 strands-agent/
-├── agent/           # Python 3.13 agent experiments
-│   └── README.md    # See agent/README.md for setup and usage
-├── .kiro/           # Kiro IDE configuration and steering rules
-└── cdk/             # (Future) TypeScript CDK for deployment
+├── agent/    # Python 3.13 agent implementation
+├── cdk/      # TypeScript CDK infrastructure
+└── .github/  # CI/CD workflows
 ```
 
-## Getting Started
+## Quick Start
 
-### Python Agent
+**Python Agent**
 
 ```bash
 cd agent
+# See agent/README.md for setup
 ```
 
-See [agent/README.md](agent/README.md) for detailed setup, usage, and development instructions.
+**CDK Infrastructure**
 
-## Future
+```bash
+cd cdk
+npm install
+# See cdk/README.md for deployment
+```
 
-This repo will eventually include:
+## CI/CD
 
-- **agent/** - Python agent code and experiments
-- **cdk/** - TypeScript CDK infrastructure for deployment
+Automated testing via GitHub Actions on every push/PR to `main`:
+
+- `agent-ci.yml` - Python testing, type checking, linting
+- `cdk-ci.yml` - TypeScript testing, type checking, linting

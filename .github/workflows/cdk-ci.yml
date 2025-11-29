@@ -9,6 +9,9 @@ on:
 jobs:
   test-cdk:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
     defaults:
       run:
         working-directory: ./cdk
@@ -38,4 +41,15 @@ jobs:
       - name: Check formatting
         run: npm run format:ci
 
-      # TODO: add synth check
+      - name: configure AWS credentials from OIDC
+        uses: aws-actions/configure-aws-credentials@v5
+        with:
+          # 15 minutes aka shortest time allowed
+          role-duration-seconds: 900
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-region: us-west-2
+
+      - name: cdk synth
+        run: npm run cdk:synth
+        env:
+          LOG_LEVEL: INFO

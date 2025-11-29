@@ -31,7 +31,7 @@ strands-agent/
 
 ### Source Code (`src/`)
 
-- `agent.py` - Main agent implementation
+- `agentcore_app.py` - Agent implementation (runs locally and in cloud)
 - `__init__.py` - Package initialization
 
 ### Tests (`tests/`)
@@ -41,7 +41,8 @@ strands-agent/
 
 ### Configuration Files
 
-- `pyproject.toml` - Single source of truth for dependencies, build config, and tool settings
+- `pyproject.toml` - Single source of truth for dependencies, build config, tool settings, and Docker deployment
+- `Dockerfile` - Container definition for AgentCore Runtime
 - `.python-version` - Python version specification (3.13)
 - `.env.example` - Template for environment variables (copy to `.env` for local config)
 
@@ -53,6 +54,14 @@ strands-agent/
 - Tools are registered via the `tools` parameter
 - Custom tools use the `@tool` decorator
 - Agent execution should be wrapped in `if __name__ == "__main__":` to prevent running during imports
+
+### AgentCore Integration
+
+- AgentCore apps use `BedrockAgentCoreApp` from `bedrock_agentcore.runtime`
+- Entry point decorated with `@app.entrypoint`
+- Accepts payload with `prompt` field
+- Returns dict with `status` and `response` or `error`
+- Runs with `app.run()` for local testing or cloud deployment
 
 ### Tool Implementation
 
@@ -72,8 +81,10 @@ strands-agent/
 
 ### Infrastructure Code (`lib/`)
 
-- `strands-agent-stack.ts` - Main CDK stack definition
-- Stack files define AWS resources and their configurations
+- `strands-agent-stack.ts` - CDK stack for deploying Strands agents to AgentCore Runtime
+- Defines AgentCore Runtime resource, IAM execution roles, and Docker image build from local assets
+- Uses `@aws-cdk/aws-bedrock-agentcore-alpha` constructs for AgentCore-specific resources
+- Builds ARM64 container images locally and deploys to AgentCore
 
 ### Entry Point (`bin/`)
 

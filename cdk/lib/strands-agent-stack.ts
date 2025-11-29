@@ -1,17 +1,116 @@
-import { Stack, StackProps } from 'aws-cdk-lib'
+import { Stack, StackProps, CfnOutput } from 'aws-cdk-lib'
+import {
+  Role,
+  ServicePrincipal,
+  PolicyDocument,
+  PolicyStatement,
+  Effect,
+} from 'aws-cdk-lib/aws-iam'
+import { Platform } from 'aws-cdk-lib/aws-ecr-assets'
 import { Construct } from 'constructs'
-// import { Queue } from 'aws-cdk-lib/aws-sqs';
-// import { Duration } from 'aws-cdk-lib';
+import { Runtime, AgentRuntimeArtifact } from '@aws-cdk/aws-bedrock-agentcore-alpha'
+import * as path from 'path'
 
 export class StrandsAgentStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props)
 
-    // The code that defines your stack goes here
+    // IAM Role for AgentCore Runtime
+    const agentRole = new Role(this, 'AgentCoreRole', {
+      assumedBy: new ServicePrincipal('bedrock-agentcore.amazonaws.com'),
+      inlinePolicies: {
+        AgentCorePolicy: new PolicyDocument({
+          statements: [
+            new PolicyStatement({
+              sid: 'ECRImageAccess',
+              effect: Effect.ALLOW,
+              actions: [
+                'ecr:BatchGetImage',
+                'ecr:GetDownloadUrlForLayer',
+                'ecr:BatchCheckLayerAvailability',
+              ],
+              resources: [`arn:aws:ecr:${this.region}:${this.account}:repository/*`],
+            }),
+            new PolicyStatement({
+              sid: 'ECRTokenAccess',
+              effect: Effect.ALLOW,
+              actions: ['ecr:GetAuthorizationToken'],
+              resources: ['*'],
+            }),
+            new PolicyStatement({
+              effect: Effect.ALLOW,
+              actions: [
+                'logs:CreateLogGroup',
+                'logs:CreateLogStream',
+                'logs:PutLogEvents',
+                'logs:DescribeLogGroups',
+                'logs:DescribeLogStreams',
+              ],
+              resources: [
+                `arn:aws:logs:${this.region}:${this.account}:log-group:/aws/bedrock-agentcore/runtimes/*`,
+              ],
+            }),
+            new PolicyStatement({
+              effect: Effect.ALLOW,
+              actions: [
+                'xray:PutTraceSegments',
+                'xray:PutTelemetryRecords',
+                'xray:GetSamplingRules',
+                'xray:GetSamplingTargets',
+              ],
+              resources: ['*'],
+            }),
+            new PolicyStatement({
+              effect: Effect.ALLOW,
+              actions: ['cloudwatch:PutMetricData'],
+              resources: ['*'],
+              conditions: {
+                StringEquals: {
+                  'cloudwatch:namespace': 'bedrock-agentcore',
+                },
+              },
+            }),
+            new PolicyStatement({
+              sid: 'BedrockModelInvocation',
+              effect: Effect.ALLOW,
+              actions: ['bedrock:InvokeModel', 'bedrock:InvokeModelWithResponseStream'],
+              resources: [
+                'arn:aws:bedrock:*::foundation-model/*',
+                `arn:aws:bedrock:${this.region}:${this.account}:*`,
+              ],
+            }),
+          ],
+        }),
+      },
+    })
 
-    // example resource
-    // const queue = new Queue(this, 'StrandsAgentQueue', {
-    //   visibilityTimeout: Duration.seconds(300)
-    // });
+    // Build Docker image from local agent code
+    const agentArtifact = AgentRuntimeArtifact.fromAsset(path.join(__dirname, '../../agent'), {
+      platform: Platform.LINUX_ARM64,
+      file: 'Dockerfile',
+    })
+
+    // Create AgentCore Runtime
+    const runtime = new Runtime(this, 'StrandsAgentRuntime', {
+      runtimeName: `${this.stackName.replace(/-/g, '_')}_StrandsAgent`,
+      agentRuntimeArtifact: agentArtifact,
+      executionRole: agentRole,
+      description: 'Strands agent with calculator, time, and letter counter tools',
+      environmentVariables: {
+        AWS_DEFAULT_REGION: this.region,
+        LOG_LEVEL: 'INFO',
+      },
+    })
+
+    // Outputs
+    new CfnOutput(this, 'RuntimeId', {
+      description: 'AgentCore Runtime ID',
+      value: runtime.agentRuntimeId,
+    })
+
+    new CfnOutput(this, 'RuntimeArn', {
+      description: 'AgentCore Runtime ARN',
+      value: runtime.agentRuntimeArn,
+    })
   }
 }

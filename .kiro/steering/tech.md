@@ -9,6 +9,7 @@
 
 - `strands-agents` (>=0.2.0) - Main agent framework
 - `strands-agents-tools` (>=0.2.0) - Community tools library
+- `bedrock-agentcore` (>=0.1.0) - AgentCore Runtime SDK
 - `strands-agents-builder` (>=0.1.10, dev only) - Development utilities
 
 ## Development Tools
@@ -35,10 +36,15 @@ pip install -e ".[dev]"
 cp .env.example .env        # Optional: configure environment variables
 ```
 
-### Run Agent
+### Run Agent Locally
 
 ```bash
-python src/agent.py
+python src/agentcore_app.py
+
+# In another terminal
+curl -X POST http://localhost:8080/invocations \
+  -H "Content-Type: application/json" \
+  -d '{"prompt": "What is 42 * 137?"}'
 ```
 
 ### Testing & Quality
@@ -66,6 +72,34 @@ All tool configurations are centralized in `agent/pyproject.toml`:
 - Target: Python 3.13
 - Mypy: Strict mode with full type checking
 - Pytest: Auto async mode
+
+## AWS Deployment
+
+### Prerequisites
+
+- Docker installed and running (for building container images)
+- AWS CLI configured with credentials for **us-west-2** region
+- Bedrock model access enabled in **us-west-2**
+
+**Region Configuration**: The project defaults to **us-west-2**. To use a different region:
+
+1. Update `agent/Dockerfile` environment variables (AWS_REGION, AWS_DEFAULT_REGION)
+2. Configure AWS CLI: `aws configure set region <your-region>`
+3. Ensure Bedrock model access in your chosen region
+
+### Deploy to AgentCore Runtime
+
+```bash
+# Ensure AWS CLI is configured for us-west-2
+aws configure set region us-west-2
+
+cd cdk
+npm install
+npm run build
+cdk deploy
+```
+
+See `DEPLOYMENT.md` for complete deployment instructions.
 
 ## CDK Development
 

@@ -1,0 +1,5 @@
+# Code owners for strands-agent repository
+# These owners will be automatically requested for review when PRs are opened
+
+# Global owner for all files
+* @deeheber

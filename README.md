@@ -1,6 +1,8 @@
 # Strands Agent Template
 
-Template repo for Strands AI agents. Intended to be used as a starter for new projects.
+Template repo for deploying Strands AI agents to AWS Bedrock AgentCore Runtime using CDK.
+
+> **Note**: This is a work in progress. See [open issues](https://github.com/deeheber/strands-agent/issues) for remaining work.
 
 ## Structure
 
@@ -13,20 +15,34 @@ strands-agent/
 
 ## Quick Start
 
-**Python Agent**
+### Local Testing
 
 ```bash
 cd agent
-# See agent/README.md for setup
+source .venv/bin/activate
+python src/agentcore_app.py
+
+# In another terminal
+curl -X POST http://localhost:8080/invocations \
+  -H "Content-Type: application/json" \
+  -d '{"prompt": "What is 42 * 137?"}'
 ```
 
-**CDK Infrastructure**
+### Deploy to AWS
 
 ```bash
+# Ensure AWS CLI is configured for us-west-2
+aws configure set region us-west-2
+
 cd cdk
 npm install
-# See cdk/README.md for deployment
+npm run build
+cdk deploy
 ```
+
+See [DEPLOYMENT.md](DEPLOYMENT.md) for complete instructions.
+
+**Note**: This project is configured for **us-west-2**. To use a different region, update the environment variables in `agent/Dockerfile`.
 
 ## CI/CD
 

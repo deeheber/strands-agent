@@ -67,6 +67,42 @@ All tool configurations are centralized in `agent/pyproject.toml`:
 - Mypy: Strict mode with full type checking
 - Pytest: Auto async mode
 
+## CDK Development
+
+### Import Best Practices
+
+**Avoid wildcard imports from aws-cdk-lib:**
+
+```typescript
+// ❌ Don't do this
+import * as cdk from "aws-cdk-lib";
+
+// ✅ Do this instead
+import { Stack, StackProps, Duration } from "aws-cdk-lib";
+import { Function, Runtime, Code } from "aws-cdk-lib/aws-lambda";
+import { Bucket } from "aws-cdk-lib/aws-s3";
+```
+
+**Benefits:**
+
+- Explicit dependencies make code more maintainable
+- Better IDE autocomplete and type checking
+- Easier to identify which CDK constructs are actually used
+- Reduces namespace pollution
+
+### CDK Commands
+
+```bash
+cd cdk
+npm install                 # Install dependencies
+npm run build              # Compile TypeScript
+npm test                   # Run Jest tests
+npm run lint               # Run ESLint
+npm run format             # Run Prettier
+cdk synth                  # Synthesize CloudFormation
+cdk deploy                 # Deploy stack
+```
+
 ## CI/CD
 
 ### Agent CI

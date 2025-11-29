@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import * as cdk from 'aws-cdk-lib/core'
+import { App } from 'aws-cdk-lib'
 import { StrandsAgentStack } from '../lib/strands-agent-stack'
 
 const { AWS_DEFAULT_ACCOUNT_ID, AWS_DEFAULT_REGION, CDK_DEFAULT_ACCOUNT, CDK_DEFAULT_REGION } =
@@ -16,7 +16,7 @@ if (!account || !region) {
   )
 }
 
-const app = new cdk.App()
+const app = new App()
 new StrandsAgentStack(app, 'StrandsAgentStack', {
   description: 'Demo template for strands-agents',
   env: { account, region },

@@ -9,6 +9,9 @@ on:
 jobs:
   test-cdk:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
     defaults:
       run:
         working-directory: ./cdk

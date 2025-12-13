@@ -20,6 +20,11 @@ COPY --from=builder /root/.local /root/.local
 # AWS_REGION and AWS_DEFAULT_REGION are set by CDK at runtime
 ENV LOG_LEVEL=INFO
 ENV PATH=/root/.local/bin:$PATH
+# OpenTelemetry environment variables
+ENV OTEL_SERVICE_NAME=strands-agent
+ENV OTEL_RESOURCE_ATTRIBUTES=service.name=strands-agent,service.version=0.1.0
+ENV OTEL_PROPAGATORS=tracecontext,baggage,xray
+ENV OTEL_PYTHON_DISABLED_INSTRUMENTATIONS=urllib3
 
 # Create non-root user for security
 RUN useradd -m -u 1000 bedrock_agentcore

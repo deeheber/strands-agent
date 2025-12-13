@@ -9,9 +9,10 @@ description = "A Strands AI agent"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "strands-agents>=0.2.0",
+    "strands-agents[otel]>=0.2.0",
     "strands-agents-tools>=0.2.0",
     "bedrock-agentcore>=0.1.0",
+    "aws-opentelemetry-distro",
 ]
 
 [project.optional-dependencies]

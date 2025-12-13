@@ -90,16 +90,22 @@ export class StrandsAgentStack extends Stack {
       file: 'Dockerfile',
     })
 
-    // Create AgentCore Runtime
+    // Create AgentCore Runtime with observability via environment variables and IAM
     const runtime = new Runtime(this, 'StrandsAgentRuntime', {
       runtimeName: `${this.stackName.replace(/-/g, '_')}_StrandsAgent`,
       agentRuntimeArtifact: agentArtifact,
       executionRole: agentRole,
-      description: 'Strands agent with calculator, time, and letter counter tools',
+      description: 'Strands agent with calculator, time, and letter counter tools - OTEL observability enabled',
       environmentVariables: {
         AWS_REGION: this.region,
         AWS_DEFAULT_REGION: this.region,
         LOG_LEVEL: 'INFO',
+        // OpenTelemetry configuration for observability
+        OTEL_SERVICE_NAME: 'strands-agent',
+        OTEL_RESOURCE_ATTRIBUTES: `service.name=strands-agent,service.version=0.1.0`,
+        OTEL_PROPAGATORS: 'tracecontext,baggage,xray',
+        OTEL_PYTHON_DISABLED_INSTRUMENTATIONS: 'urllib3',
+        AWS_LAMBDA_EXEC_WRAPPER: '/opt/otel-instrument',
       },
     })
 

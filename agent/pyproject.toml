@@ -11,7 +11,7 @@ requires-python = ">=3.13"
 dependencies = [
     "strands-agents>=0.2.0",
     "strands-agents-tools>=0.2.0",
-    "bedrock-agentcore>=1.1.1",
+    "bedrock-agentcore>=0.0.1",
     "aws-opentelemetry-distro>=0.14.0,<1.0.0",
 ]
 

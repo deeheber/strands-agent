@@ -288,15 +288,11 @@ exports[`StrandsAgentStack CloudFormation Template Snapshot matches the expected
           },
         },
         "AgentRuntimeName": "TestStrandsAgentStack_StrandsAgent",
-        "Description": "Strands agent with calculator, time, and letter counter tools - simplified observability",
+        "Description": "Strands agent with calculator, time, and letter counter tools - fully automated observability",
         "EnvironmentVariables": {
           "AWS_DEFAULT_REGION": "us-west-2",
           "AWS_REGION": "us-west-2",
-          "BEDROCK_AGENTCORE_RUNTIME_ID": "agentcore-runtime",
           "LOG_LEVEL": "INFO",
-          "OTEL_PROPAGATORS": "tracecontext,baggage,xray",
-          "OTEL_RESOURCE_ATTRIBUTES": "service.name=strands-agent,service.version=0.1.0",
-          "OTEL_SERVICE_NAME": "strands-agent",
         },
         "LifecycleConfiguration": {
           "IdleRuntimeSessionTimeout": 60,

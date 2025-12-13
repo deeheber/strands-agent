@@ -283,7 +283,7 @@ exports[`StrandsAgentStack CloudFormation Template Snapshot matches the expected
         "AgentRuntimeArtifact": {
           "ContainerConfiguration": {
             "ContainerUri": {
-              "Fn::Sub": "123456789012.dkr.ecr.us-west-2.\${AWS::URLSuffix}/cdk-hnb659fds-container-assets-123456789012-us-west-2:aa5dd78197cd349baba049fb1ed051159ce4f0138fe59c32f0889bc0ceb7c3dd",
+              "Fn::Sub": "123456789012.dkr.ecr.us-west-2.\${AWS::URLSuffix}/cdk-hnb659fds-container-assets-123456789012-us-west-2:MOCKED_CONTAINER_HASH",
             },
           },
         },

@@ -15,7 +15,7 @@ export class StrandsAgentStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props)
 
-    // IAM Role for AgentCore Runtime
+    // IAM Role for AgentCore Runtime with comprehensive observability permissions
     const agentRole = new Role(this, 'AgentCoreRole', {
       assumedBy: new ServicePrincipal('bedrock-agentcore.amazonaws.com'),
       inlinePolicies: {
@@ -38,6 +38,7 @@ export class StrandsAgentStack extends Stack {
               resources: ['*'],
             }),
             new PolicyStatement({
+              sid: 'CloudWatchLogsAccess',
               effect: Effect.ALLOW,
               actions: [
                 'logs:CreateLogGroup',
@@ -51,6 +52,7 @@ export class StrandsAgentStack extends Stack {
               ],
             }),
             new PolicyStatement({
+              sid: 'XRayAccess',
               effect: Effect.ALLOW,
               actions: [
                 'xray:PutTraceSegments',
@@ -61,6 +63,7 @@ export class StrandsAgentStack extends Stack {
               resources: ['*'],
             }),
             new PolicyStatement({
+              sid: 'CloudWatchMetricsAccess',
               effect: Effect.ALLOW,
               actions: ['cloudwatch:PutMetricData'],
               resources: ['*'],
@@ -90,25 +93,24 @@ export class StrandsAgentStack extends Stack {
       file: 'Dockerfile',
     })
 
-    // Create AgentCore Runtime with observability via environment variables and IAM
+    // Create AgentCore Runtime with minimal observability configuration
+    // AgentCore handles most observability infrastructure automatically
     const runtime = new Runtime(this, 'StrandsAgentRuntime', {
       runtimeName: `${this.stackName.replace(/-/g, '_')}_StrandsAgent`,
       agentRuntimeArtifact: agentArtifact,
       executionRole: agentRole,
       description:
-        'Strands agent with calculator, time, and letter counter tools - OTEL observability enabled',
+        'Strands agent with calculator, time, and letter counter tools - simplified observability',
       environmentVariables: {
         AWS_REGION: this.region,
         AWS_DEFAULT_REGION: this.region,
         LOG_LEVEL: 'INFO',
-        // Identifier for AgentCore runtime environment (set to static value during deployment)
+        // Identifier for AgentCore runtime environment
         BEDROCK_AGENTCORE_RUNTIME_ID: 'agentcore-runtime',
-        // OpenTelemetry configuration for observability
+        // Minimal OTEL configuration - AgentCore handles the rest
         OTEL_SERVICE_NAME: 'strands-agent',
         OTEL_RESOURCE_ATTRIBUTES: `service.name=strands-agent,service.version=0.1.0`,
         OTEL_PROPAGATORS: 'tracecontext,baggage,xray',
-        OTEL_PYTHON_DISABLED_INSTRUMENTATIONS: 'urllib3',
-        AWS_LAMBDA_EXEC_WRAPPER: '/opt/otel-instrument',
       },
     })
 

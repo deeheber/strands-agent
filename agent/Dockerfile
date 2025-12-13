@@ -13,21 +13,17 @@ FROM public.ecr.aws/docker/library/python:3.13-slim
 
 WORKDIR /app
 
-# Copy installed dependencies from builder
-COPY --from=builder /root/.local /root/.local
+# Create non-root user for security
+RUN useradd -m -u 1000 bedrock_agentcore
+
+# Copy installed dependencies from builder to bedrock_agentcore user's home directory
+COPY --from=builder --chown=bedrock_agentcore:bedrock_agentcore /root/.local /home/bedrock_agentcore/.local
 
 # Set environment variables
 # AWS_REGION and AWS_DEFAULT_REGION are set by CDK at runtime
 ENV LOG_LEVEL=INFO
-ENV PATH=/root/.local/bin:$PATH
-# OpenTelemetry environment variables
-ENV OTEL_SERVICE_NAME=strands-agent
-ENV OTEL_RESOURCE_ATTRIBUTES=service.name=strands-agent,service.version=0.1.0
-ENV OTEL_PROPAGATORS=tracecontext,baggage,xray
-ENV OTEL_PYTHON_DISABLED_INSTRUMENTATIONS=urllib3
-
-# Create non-root user for security
-RUN useradd -m -u 1000 bedrock_agentcore
+ENV PATH=/home/bedrock_agentcore/.local/bin:$PATH
+ENV PYTHONPATH=/home/bedrock_agentcore/.local/lib/python3.13/site-packages
 
 # Copy application code
 COPY --chown=bedrock_agentcore:bedrock_agentcore src/ .

@@ -132,7 +132,8 @@ describe('StrandsAgentStack', () => {
     it('creates AgentCore runtime with proper configuration', () => {
       template.hasResourceProperties('AWS::BedrockAgentCore::Runtime', {
         AgentRuntimeName: 'TestStrandsAgentStack_StrandsAgent',
-        Description: 'Strands agent with calculator, time, and letter counter tools - simplified observability',
+        Description:
+          'Strands agent with calculator, time, and letter counter tools - simplified observability',
         RoleArn: {
           'Fn::GetAtt': [Match.stringLikeRegexp('AgentCoreRole.*'), 'Arn'],
         },
@@ -145,6 +146,10 @@ describe('StrandsAgentStack', () => {
           AWS_REGION: 'us-west-2',
           AWS_DEFAULT_REGION: 'us-west-2',
           LOG_LEVEL: 'INFO',
+          BEDROCK_AGENTCORE_RUNTIME_ID: 'agentcore-runtime',
+          OTEL_SERVICE_NAME: 'strands-agent',
+          OTEL_RESOURCE_ATTRIBUTES: 'service.name=strands-agent,service.version=0.1.0',
+          OTEL_PROPAGATORS: 'tracecontext,baggage,xray',
         },
       })
     })

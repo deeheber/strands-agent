@@ -71,7 +71,11 @@ describe('StrandsAgentStack', () => {
         PolicyDocument: {
           Statement: Match.arrayWith([
             Match.objectLike({
-              Action: ['xray:PutTraceSegments', 'xray:PutTelemetryRecords', 'cloudwatch:PutMetricData'],
+              Action: [
+                'xray:PutTraceSegments',
+                'xray:PutTelemetryRecords',
+                'cloudwatch:PutMetricData',
+              ],
               Effect: 'Allow',
               Resource: '*',
               Condition: {
@@ -248,7 +252,10 @@ describe('StrandsAgentStack', () => {
 
       // Replace dynamic containerUri hash with stable placeholder for snapshot testing
       const templateString = JSON.stringify(templateJson)
-      const normalizedTemplate = templateString.replace(/:[\da-f]{64}"/g, ':MOCKED_CONTAINER_HASH"')
+      const normalizedTemplate = templateString.replace(
+        /:[\da-f]{64}"/g,
+        ':MOCKED_CONTAINER_HASH"'
+      )
 
       expect(JSON.parse(normalizedTemplate)).toMatchSnapshot()
     })

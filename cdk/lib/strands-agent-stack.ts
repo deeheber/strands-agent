@@ -1,11 +1,5 @@
 import { Stack, StackProps, CfnOutput } from 'aws-cdk-lib'
-import {
-  Role,
-  ServicePrincipal,
-  PolicyDocument,
-  PolicyStatement,
-  Effect,
-} from 'aws-cdk-lib/aws-iam'
+import { Role, ServicePrincipal, PolicyStatement, Effect } from 'aws-cdk-lib/aws-iam'
 import { Platform } from 'aws-cdk-lib/aws-ecr-assets'
 import { Construct } from 'constructs'
 import { Runtime, AgentRuntimeArtifact } from '@aws-cdk/aws-bedrock-agentcore-alpha'
@@ -19,66 +13,9 @@ export class StrandsAgentStack extends Stack {
   constructor(scope: Construct, id: string, props: StrandsAgentStackProps) {
     super(scope, id, props)
 
-    // IAM Role for AgentCore Runtime
+    // IAM Role for AgentCore Runtime - let CDK manage base permissions
     const agentRole = new Role(this, 'AgentCoreRole', {
       assumedBy: new ServicePrincipal('bedrock-agentcore.amazonaws.com'),
-      inlinePolicies: {
-        AgentCorePolicy: new PolicyDocument({
-          statements: [
-            // ECR access for container images
-            new PolicyStatement({
-              sid: 'ECRAccess',
-              effect: Effect.ALLOW,
-              actions: [
-                'ecr:BatchGetImage',
-                'ecr:GetDownloadUrlForLayer',
-                'ecr:BatchCheckLayerAvailability',
-                'ecr:GetAuthorizationToken',
-              ],
-              resources: [
-                `arn:aws:ecr:${this.region}:${this.account}:repository/cdk-*`,
-                '*', // GetAuthorizationToken requires wildcard
-              ],
-            }),
-            // CloudWatch Logs for AgentCore
-            new PolicyStatement({
-              sid: 'CloudWatchLogs',
-              effect: Effect.ALLOW,
-              actions: ['logs:CreateLogGroup', 'logs:CreateLogStream', 'logs:PutLogEvents'],
-              resources: [
-                `arn:aws:logs:${this.region}:${this.account}:log-group:/aws/bedrock-agentcore/runtimes/*`,
-              ],
-            }),
-            // Observability (X-Ray and CloudWatch metrics)
-            new PolicyStatement({
-              sid: 'Observability',
-              effect: Effect.ALLOW,
-              actions: [
-                'xray:PutTraceSegments',
-                'xray:PutTelemetryRecords',
-                'cloudwatch:PutMetricData',
-              ],
-              resources: ['*'],
-              conditions: {
-                StringEquals: {
-                  'cloudwatch:namespace': 'bedrock-agentcore',
-                },
-              },
-            }),
-            // Bedrock models and inference profiles
-            // TODO: scope down to models used
-            new PolicyStatement({
-              sid: 'BedrockModels',
-              effect: Effect.ALLOW,
-              actions: ['bedrock:InvokeModel', 'bedrock:InvokeModelWithResponseStream'],
-              resources: [
-                'arn:aws:bedrock:*::foundation-model/*',
-                `arn:aws:bedrock:${this.region}:${this.account}:inference-profile/*`,
-              ],
-            }),
-          ],
-        }),
-      },
     })
 
     // Build Docker image from local agent code
@@ -101,6 +38,57 @@ export class StrandsAgentStack extends Stack {
         ...(props.bedrockModelID && { BEDROCK_MODEL_ID: props.bedrockModelID }),
       },
     })
+
+    // Add additional permissions using addToRolePolicy
+    // ECR GetAuthorizationToken (CDK auto-generates other ECR permissions, but not this one)
+    agentRole.addToRolePolicy(
+      new PolicyStatement({
+        sid: 'ECRGetAuthorizationToken',
+        effect: Effect.ALLOW,
+        actions: ['ecr:GetAuthorizationToken'],
+        resources: ['*'], // GetAuthorizationToken requires wildcard
+      })
+    )
+
+    // CloudWatch Logs for AgentCore
+    agentRole.addToRolePolicy(
+      new PolicyStatement({
+        sid: 'CloudWatchLogs',
+        effect: Effect.ALLOW,
+        actions: ['logs:CreateLogGroup', 'logs:CreateLogStream', 'logs:PutLogEvents'],
+        resources: [
+          `arn:aws:logs:${this.region}:${this.account}:log-group:/aws/bedrock-agentcore/runtimes/*`,
+        ],
+      })
+    )
+
+    // Observability (X-Ray and CloudWatch metrics)
+    agentRole.addToRolePolicy(
+      new PolicyStatement({
+        sid: 'Observability',
+        effect: Effect.ALLOW,
+        actions: ['xray:PutTraceSegments', 'xray:PutTelemetryRecords', 'cloudwatch:PutMetricData'],
+        resources: ['*'],
+        conditions: {
+          StringEquals: {
+            'cloudwatch:namespace': 'bedrock-agentcore',
+          },
+        },
+      })
+    )
+
+    // Bedrock models and inference profiles
+    agentRole.addToRolePolicy(
+      new PolicyStatement({
+        sid: 'BedrockModels',
+        effect: Effect.ALLOW,
+        actions: ['bedrock:InvokeModel', 'bedrock:InvokeModelWithResponseStream'],
+        resources: [
+          'arn:aws:bedrock:*::foundation-model/*',
+          `arn:aws:bedrock:${this.region}:${this.account}:inference-profile/*`,
+        ],
+      })
+    )
 
     // Outputs
     new CfnOutput(this, 'RuntimeId', {

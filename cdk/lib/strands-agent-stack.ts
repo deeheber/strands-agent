@@ -39,9 +39,9 @@ export class StrandsAgentStack extends Stack {
       },
     })
 
-    // Add additional permissions using addToRolePolicy
+    // Add additional permissions using addToPolicy
     // ECR GetAuthorizationToken (CDK auto-generates other ECR permissions, but not this one)
-    agentRole.addToRolePolicy(
+    agentRole.addToPolicy(
       new PolicyStatement({
         sid: 'ECRGetAuthorizationToken',
         effect: Effect.ALLOW,
@@ -51,7 +51,7 @@ export class StrandsAgentStack extends Stack {
     )
 
     // CloudWatch Logs for AgentCore
-    agentRole.addToRolePolicy(
+    agentRole.addToPolicy(
       new PolicyStatement({
         sid: 'CloudWatchLogs',
         effect: Effect.ALLOW,
@@ -63,7 +63,7 @@ export class StrandsAgentStack extends Stack {
     )
 
     // Observability (X-Ray and CloudWatch metrics)
-    agentRole.addToRolePolicy(
+    agentRole.addToPolicy(
       new PolicyStatement({
         sid: 'Observability',
         effect: Effect.ALLOW,
@@ -78,7 +78,7 @@ export class StrandsAgentStack extends Stack {
     )
 
     // Bedrock models and inference profiles
-    agentRole.addToRolePolicy(
+    agentRole.addToPolicy(
       new PolicyStatement({
         sid: 'BedrockModels',
         effect: Effect.ALLOW,

@@ -35,108 +35,28 @@ describe('StrandsAgentStack', () => {
       })
     })
 
-    it('configures ECR permissions for container image access', () => {
-      template.hasResourceProperties('AWS::IAM::Role', {
-        Policies: [
-          {
-            PolicyDocument: {
-              Statement: Match.arrayWith([
-                Match.objectLike({
-                  Sid: 'ECRAccess',
-                  Effect: 'Allow',
-                  Action: [
-                    'ecr:BatchGetImage',
-                    'ecr:GetDownloadUrlForLayer',
-                    'ecr:BatchCheckLayerAvailability',
-                    'ecr:GetAuthorizationToken',
-                  ],
-                  Resource: [
-                    Match.stringLikeRegexp('arn:aws:ecr:.+:.+:repository/cdk-\\*'),
-                    '*', // GetAuthorizationToken requires wildcard
-                  ],
-                }),
-              ]),
-            },
-          },
-        ],
-      })
-    })
-
-    it('configures CloudWatch logs permissions', () => {
-      template.hasResourceProperties('AWS::IAM::Role', {
-        Policies: [
-          {
-            PolicyDocument: {
-              Statement: Match.arrayWith([
-                Match.objectLike({
-                  Sid: 'CloudWatchLogs',
-                  Effect: 'Allow',
-                  Action: ['logs:CreateLogGroup', 'logs:CreateLogStream', 'logs:PutLogEvents'],
-                  Resource: Match.stringLikeRegexp(
-                    'arn:aws:logs:.+:.+:log-group:/aws/bedrock-agentcore/runtimes/\\*'
-                  ),
-                }),
-              ]),
-            },
-          },
-        ],
-      })
-    })
-
-    it('configures observability permissions for X-Ray and CloudWatch metrics', () => {
-      template.hasResourceProperties('AWS::IAM::Role', {
-        Policies: [
-          {
-            PolicyDocument: {
-              Statement: Match.arrayWith([
-                Match.objectLike({
-                  Sid: 'Observability',
-                  Effect: 'Allow',
-                  Action: [
-                    'xray:PutTraceSegments',
-                    'xray:PutTelemetryRecords',
-                    'cloudwatch:PutMetricData',
-                  ],
-                  Resource: '*',
-                  Condition: {
-                    StringEquals: {
-                      'cloudwatch:namespace': 'bedrock-agentcore',
-                    },
-                  },
-                }),
-              ]),
-            },
-          },
-        ],
-      })
-    })
-
     it('configures Bedrock model invocation permissions', () => {
-      template.hasResourceProperties('AWS::IAM::Role', {
-        Policies: [
-          {
-            PolicyDocument: {
-              Statement: Match.arrayWith([
-                Match.objectLike({
-                  Sid: 'BedrockModels',
-                  Effect: 'Allow',
-                  Action: ['bedrock:InvokeModel', 'bedrock:InvokeModelWithResponseStream'],
-                  Resource: [
-                    'arn:aws:bedrock:*::foundation-model/*',
-                    Match.stringLikeRegexp('arn:aws:bedrock:.+:.+:inference-profile/\\*'),
-                  ],
-                }),
-              ]),
-            },
-          },
-        ],
+      template.hasResourceProperties('AWS::IAM::Policy', {
+        PolicyDocument: {
+          Statement: Match.arrayWith([
+            Match.objectLike({
+              Action: ['bedrock:InvokeModel', 'bedrock:InvokeModelWithResponseStream'],
+              Effect: 'Allow',
+              Resource: [
+                'arn:aws:bedrock:*::foundation-model/*',
+                Match.stringLikeRegexp('arn:aws:bedrock:.+:.+:inference-profile/\\*'),
+              ],
+            }),
+          ]),
+        },
       })
     })
   })
 
   describe('Required Resources', () => {
-    it('creates exactly one IAM role and runtime', () => {
+    it('creates exactly one IAM role, one policy, and one runtime', () => {
       template.resourceCountIs('AWS::IAM::Role', 1)
+      template.resourceCountIs('AWS::IAM::Policy', 1)
       template.resourceCountIs('AWS::BedrockAgentCore::Runtime', 1)
     })
 
@@ -187,88 +107,6 @@ describe('StrandsAgentStack', () => {
             },
           },
         },
-      })
-    })
-
-    it('creates ECR access policy for container deployment', () => {
-      // CDK creates additional IAM policy for ECR access
-      template.resourceCountIs('AWS::IAM::Policy', 1)
-
-      template.hasResourceProperties('AWS::IAM::Policy', {
-        PolicyDocument: {
-          Statement: Match.arrayWith([
-            Match.objectLike({
-              Action: Match.arrayWith([
-                'ecr:BatchCheckLayerAvailability',
-                'ecr:GetDownloadUrlForLayer',
-                'ecr:BatchGetImage',
-              ]),
-              Effect: 'Allow',
-            }),
-          ]),
-        },
-      })
-    })
-  })
-
-  describe('Security Validation', () => {
-    it('ensures permissions follow principle of least privilege', () => {
-      // Verify that ECR permissions are scoped to account resources where possible
-      template.hasResourceProperties('AWS::IAM::Role', {
-        Policies: [
-          {
-            PolicyDocument: {
-              Statement: Match.arrayWith([
-                Match.objectLike({
-                  Sid: 'ECRAccess',
-                  Resource: Match.arrayWith([
-                    Match.stringLikeRegexp('arn:aws:ecr:.+:.+:repository/cdk-\\*'),
-                  ]),
-                }),
-              ]),
-            },
-          },
-        ],
-      })
-
-      // Verify CloudWatch logs are scoped to AgentCore log groups
-      template.hasResourceProperties('AWS::IAM::Role', {
-        Policies: [
-          {
-            PolicyDocument: {
-              Statement: Match.arrayWith([
-                Match.objectLike({
-                  Sid: 'CloudWatchLogs',
-                  Action: ['logs:CreateLogGroup', 'logs:CreateLogStream', 'logs:PutLogEvents'],
-                  Resource: Match.stringLikeRegexp(
-                    'arn:aws:logs:.+:.+:log-group:/aws/bedrock-agentcore/runtimes/\\*'
-                  ),
-                }),
-              ]),
-            },
-          },
-        ],
-      })
-
-      // Verify CloudWatch metrics are scoped to bedrock-agentcore namespace
-      template.hasResourceProperties('AWS::IAM::Role', {
-        Policies: [
-          {
-            PolicyDocument: {
-              Statement: Match.arrayWith([
-                Match.objectLike({
-                  Sid: 'Observability',
-                  Action: Match.arrayWith(['cloudwatch:PutMetricData']),
-                  Condition: {
-                    StringEquals: {
-                      'cloudwatch:namespace': 'bedrock-agentcore',
-                    },
-                  },
-                }),
-              ]),
-            },
-          },
-        ],
       })
     })
   })

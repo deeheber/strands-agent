@@ -35,60 +35,6 @@ describe('StrandsAgentStack', () => {
       })
     })
 
-    it('configures ECR GetAuthorizationToken permission', () => {
-      // CDK auto-generates most ECR permissions, but we need to add GetAuthorizationToken
-      template.hasResourceProperties('AWS::IAM::Policy', {
-        PolicyDocument: {
-          Statement: Match.arrayWith([
-            Match.objectLike({
-              Action: ['ecr:GetAuthorizationToken'],
-              Effect: 'Allow',
-              Resource: '*',
-            }),
-          ]),
-        },
-      })
-    })
-
-    it('configures CloudWatch logs permissions', () => {
-      template.hasResourceProperties('AWS::IAM::Policy', {
-        PolicyDocument: {
-          Statement: Match.arrayWith([
-            Match.objectLike({
-              Action: ['logs:CreateLogGroup', 'logs:CreateLogStream', 'logs:PutLogEvents'],
-              Effect: 'Allow',
-              Resource: Match.stringLikeRegexp(
-                'arn:aws:logs:.+:.+:log-group:/aws/bedrock-agentcore/runtimes/\\*'
-              ),
-            }),
-          ]),
-        },
-      })
-    })
-
-    it('configures observability permissions for X-Ray and CloudWatch metrics', () => {
-      template.hasResourceProperties('AWS::IAM::Policy', {
-        PolicyDocument: {
-          Statement: Match.arrayWith([
-            Match.objectLike({
-              Action: [
-                'xray:PutTraceSegments',
-                'xray:PutTelemetryRecords',
-                'cloudwatch:PutMetricData',
-              ],
-              Effect: 'Allow',
-              Resource: '*',
-              Condition: {
-                StringEquals: {
-                  'cloudwatch:namespace': 'bedrock-agentcore',
-                },
-              },
-            }),
-          ]),
-        },
-      })
-    })
-
     it('configures Bedrock model invocation permissions', () => {
       template.hasResourceProperties('AWS::IAM::Policy', {
         PolicyDocument: {
@@ -163,87 +109,6 @@ describe('StrandsAgentStack', () => {
         },
       })
     })
-
-    it('creates ECR access policies for container deployment', () => {
-      // CDK auto-generates ECR permissions for pulling images from the repository
-      template.hasResourceProperties('AWS::IAM::Policy', {
-        PolicyDocument: {
-          Statement: Match.arrayWith([
-            Match.objectLike({
-              Action: Match.arrayWith([
-                'ecr:BatchCheckLayerAvailability',
-                'ecr:GetDownloadUrlForLayer',
-                'ecr:BatchGetImage',
-              ]),
-              Effect: 'Allow',
-            }),
-          ]),
-        },
-      })
-
-      // We manually add GetAuthorizationToken permission
-      template.hasResourceProperties('AWS::IAM::Policy', {
-        PolicyDocument: {
-          Statement: Match.arrayWith([
-            Match.objectLike({
-              Action: ['ecr:GetAuthorizationToken'],
-              Effect: 'Allow',
-              Resource: '*',
-            }),
-          ]),
-        },
-      })
-    })
-  })
-
-  describe('Security Validation', () => {
-    it('ensures permissions follow principle of least privilege', () => {
-      // Verify that ECR permissions are scoped to account resources (CDK auto-generates this)
-      template.hasResourceProperties('AWS::IAM::Policy', {
-        PolicyDocument: {
-          Statement: Match.arrayWith([
-            Match.objectLike({
-              Action: Match.arrayWith([
-                'ecr:BatchCheckLayerAvailability',
-                'ecr:GetDownloadUrlForLayer',
-                'ecr:BatchGetImage',
-              ]),
-              Resource: Match.stringLikeRegexp('arn:aws:ecr:.+:.+:repository/cdk-.*'),
-            }),
-          ]),
-        },
-      })
-
-      // Verify CloudWatch logs are scoped to AgentCore log groups
-      template.hasResourceProperties('AWS::IAM::Policy', {
-        PolicyDocument: {
-          Statement: Match.arrayWith([
-            Match.objectLike({
-              Action: ['logs:CreateLogGroup', 'logs:CreateLogStream', 'logs:PutLogEvents'],
-              Resource: Match.stringLikeRegexp(
-                'arn:aws:logs:.+:.+:log-group:/aws/bedrock-agentcore/runtimes/\\*'
-              ),
-            }),
-          ]),
-        },
-      })
-
-      // Verify CloudWatch metrics are scoped to bedrock-agentcore namespace
-      template.hasResourceProperties('AWS::IAM::Policy', {
-        PolicyDocument: {
-          Statement: Match.arrayWith([
-            Match.objectLike({
-              Action: Match.arrayWith(['cloudwatch:PutMetricData']),
-              Condition: {
-                StringEquals: {
-                  'cloudwatch:namespace': 'bedrock-agentcore',
-                },
-              },
-            }),
-          ]),
-        },
-      })
-    })
   })
 
   describe('CloudFormation Template Snapshot', () => {
@@ -252,10 +117,7 @@ describe('StrandsAgentStack', () => {
 
       // Replace dynamic containerUri hash with stable placeholder for snapshot testing
       const templateString = JSON.stringify(templateJson)
-      const normalizedTemplate = templateString.replace(
-        /:[\da-f]{64}"/g,
-        ':MOCKED_CONTAINER_HASH"'
-      )
+      const normalizedTemplate = templateString.replace(/:[\da-f]{64}"/g, ':MOCKED_CONTAINER_HASH"')
 
       expect(JSON.parse(normalizedTemplate)).toMatchSnapshot()
     })

@@ -13,19 +13,16 @@ export class StrandsAgentStack extends Stack {
   constructor(scope: Construct, id: string, props: StrandsAgentStackProps) {
     super(scope, id, props)
 
-    // IAM Role for AgentCore Runtime - let CDK manage base permissions
     const agentRole = new Role(this, 'AgentCoreRole', {
       assumedBy: new ServicePrincipal('bedrock-agentcore.amazonaws.com'),
     })
 
-    // Build Docker image from local agent code
     const agentArtifact = AgentRuntimeArtifact.fromAsset(path.join(__dirname, '../../agent'), {
       platform: Platform.LINUX_ARM64,
       // https://github.com/aws/aws-cdk-cli/issues/650
       extraHash: `${this.account}-${this.region}`,
     })
 
-    // Create AgentCore Runtime
     const runtime = new Runtime(this, 'StrandsAgentRuntime', {
       runtimeName: `${this.stackName.replace(/-/g, '_')}_StrandsAgent`,
       agentRuntimeArtifact: agentArtifact,
@@ -39,45 +36,6 @@ export class StrandsAgentStack extends Stack {
       },
     })
 
-    // Add additional permissions using addToPolicy
-    // ECR GetAuthorizationToken (CDK auto-generates other ECR permissions, but not this one)
-    agentRole.addToPolicy(
-      new PolicyStatement({
-        sid: 'ECRGetAuthorizationToken',
-        effect: Effect.ALLOW,
-        actions: ['ecr:GetAuthorizationToken'],
-        resources: ['*'], // GetAuthorizationToken requires wildcard
-      })
-    )
-
-    // CloudWatch Logs for AgentCore
-    agentRole.addToPolicy(
-      new PolicyStatement({
-        sid: 'CloudWatchLogs',
-        effect: Effect.ALLOW,
-        actions: ['logs:CreateLogGroup', 'logs:CreateLogStream', 'logs:PutLogEvents'],
-        resources: [
-          `arn:aws:logs:${this.region}:${this.account}:log-group:/aws/bedrock-agentcore/runtimes/*`,
-        ],
-      })
-    )
-
-    // Observability (X-Ray and CloudWatch metrics)
-    agentRole.addToPolicy(
-      new PolicyStatement({
-        sid: 'Observability',
-        effect: Effect.ALLOW,
-        actions: ['xray:PutTraceSegments', 'xray:PutTelemetryRecords', 'cloudwatch:PutMetricData'],
-        resources: ['*'],
-        conditions: {
-          StringEquals: {
-            'cloudwatch:namespace': 'bedrock-agentcore',
-          },
-        },
-      })
-    )
-
-    // Bedrock models and inference profiles
     agentRole.addToPolicy(
       new PolicyStatement({
         sid: 'BedrockModels',
@@ -90,7 +48,6 @@ export class StrandsAgentStack extends Stack {
       })
     )
 
-    // Outputs
     new CfnOutput(this, 'RuntimeId', {
       description: 'AgentCore Runtime ID',
       value: runtime.agentRuntimeId,

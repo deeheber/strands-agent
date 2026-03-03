@@ -1,0 +1,7 @@
+{
+  "task_id": "task-migrate-jest-to-vitest",
+  "task_description": "Migrate CDK test infrastructure from Jest (with ts-jest transpiler) to Vitest, as requested in PR #35 review feedback. Remove orphaned Jest/ts-jest dependencies, add Vitest, update config, regenerate snapshots, and update all documentation references.",
+  "status": "in_progress",
+  "feature_order": ["FEAT-001", "FEAT-002"],
+  "blocked_reason": null
+}

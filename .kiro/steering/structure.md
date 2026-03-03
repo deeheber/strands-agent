@@ -68,12 +68,12 @@ strands-agent/
 - `lib/strands-agent-stack.ts` - AgentCore Runtime stack (ARM64, IAM, Docker build)
 - `bin/cdk.ts` - App entry point
 - `test/cdk.test.ts` - Stack tests with snapshot testing
-- Config: `package.json`, `tsconfig.json`, `jest.config.ts`, `eslint.config.mjs`, `cdk.json`
+- Config: `package.json`, `tsconfig.json`, `vitest.config.ts`, `eslint.config.mjs`, `cdk.json`
 
 ### Tests (`test/`)
 
 - `cdk.test.ts` - CDK stack tests (IAM, resources, security, snapshots)
-- `__snapshots__/` - Jest snapshot files
+- `__snapshots__/` - Vitest snapshot files
 
 **Current Implementation:**
 
@@ -84,5 +84,5 @@ strands-agent/
 ## CI/CD
 
 - **agent-ci.yml** - Python testing (pytest, mypy, ruff, black)
-- **cdk-ci.yml** - TypeScript testing (Jest, ESLint, Prettier)
+- **cdk-ci.yml** - TypeScript testing (Vitest, ESLint, Prettier)
 - Runs on push/PR to main

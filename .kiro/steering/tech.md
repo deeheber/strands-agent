@@ -90,5 +90,5 @@ npm run cdk:synth && npm run cdk:deploy                     # Deploy
 ## CI/CD
 
 - **agent-ci.yml** - Python testing (pytest, mypy, ruff, black)
-- **cdk-ci.yml** - TypeScript testing (Jest, ESLint, Prettier)
+- **cdk-ci.yml** - TypeScript testing (Vitest, ESLint, Prettier)
 - Runs on push/PR to main

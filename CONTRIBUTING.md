@@ -106,7 +106,7 @@ cdk deploy   # Deploy to AWS
 
 - **Formatter**: Prettier
 - **Linter**: ESLint
-- **Testing**: Jest with snapshot testing
+- **Testing**: Vitest with snapshot testing
 - **Imports**: Use explicit imports, avoid wildcards
 
 **Good TypeScript imports:**
@@ -150,7 +150,7 @@ def my_custom_tool(input_param: str) -> str:
 
 **CDK tests:**
 
-- Use Jest with snapshot testing
+- Use Vitest with snapshot testing
 - Test IAM policies, resource configurations, and security settings
 - Update snapshots when infrastructure changes are intentional
 
@@ -220,7 +220,7 @@ Our GitHub Actions workflows will automatically:
 **CDK Infrastructure CI (`cdk-ci.yml`):**
 
 - Build TypeScript
-- Run Jest tests
+- Run Vitest tests
 - Lint with ESLint
 - Format check with Prettier
 

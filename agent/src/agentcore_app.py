@@ -26,7 +26,7 @@ if os.path.exists(".env"):
             stacklevel=2,
         )
 
-DEFAULT_MODEL_ID = "us.anthropic.claude-sonnet-4-5-20250929-v1:0"
+DEFAULT_MODEL_ID = "us.anthropic.claude-sonnet-4-6"
 log_level = os.getenv("LOG_LEVEL", "INFO").upper()
 
 logging.basicConfig(
@@ -47,7 +47,7 @@ def get_model_id() -> str:
     Returns:
         str: The model ID to use for the agent
     """
-    model_id = os.getenv("BEDROCK_MODEL_ID", DEFAULT_MODEL_ID)
+    model_id = os.getenv("BEDROCK_MODEL_ID", "").strip() or DEFAULT_MODEL_ID
     logging.info(f"Using Bedrock model: {model_id}")
     return model_id
 

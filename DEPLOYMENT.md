@@ -18,7 +18,7 @@ The CI/CD pipeline requires OIDC authentication to deploy from GitHub Actions to
 
 ## Configuration
 
-**Model Selection** (optional): Set `BEDROCK_MODEL_ID` environment variable to use a different Bedrock model. If not provided, defaults to `us.anthropic.claude-sonnet-4-5-20250929-v1:0`.
+**Model Selection** (optional): Set `BEDROCK_MODEL_ID` environment variable to use a different Bedrock model. If not provided, defaults to `us.anthropic.claude-sonnet-4-6`.
 
 ```bash
 # Local (agent/.env file)

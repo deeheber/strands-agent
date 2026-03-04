@@ -10,7 +10,7 @@ const envSchema = z
     CDK_DEFAULT_REGION: z.string().optional(),
     AWS_DEFAULT_ACCOUNT_ID: z.string().optional(),
     AWS_DEFAULT_REGION: z.string().optional(),
-    BEDROCK_MODEL_ID: z.string().optional(),
+    BEDROCK_MODEL_ID: z.string().trim().min(1).optional(),
   })
   .refine((data) => data.CDK_DEFAULT_ACCOUNT ?? data.AWS_DEFAULT_ACCOUNT_ID, {
     message:

@@ -1,6 +1,6 @@
 # Strands Agent
 
-Python 3.13 agent with calculator, time, HTTP requests, and letter counter tools.
+Python 3.13 agent with calculator, time, and letter counter tools.
 
 ## Quick Start
 
@@ -34,10 +34,12 @@ LOG_LEVEL=DEBUG
 **Community Tools:**
 
 ```python
-from strands_tools import calculator, current_time, http_request
+from strands_tools import calculator, current_time
 def get_agent() -> Agent:
-    return Agent(tools=[calculator, current_time, http_request])
+    return Agent(tools=[calculator, current_time, letter_counter])
 ```
+
+Additional tools (e.g. `http_request`, `file_read`) are available from `strands-agents-tools` — import any you want and add them to the `tools=[...]` list.
 
 **Custom Tools:**
 

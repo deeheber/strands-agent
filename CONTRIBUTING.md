@@ -228,10 +228,11 @@ All checks must pass before merging.
 
 ## Community Tools
 
-We use `strands-agents-tools` for common functionality:
+We use `strands-agents-tools` for common functionality. The template currently wires up `calculator` and `current_time`; additional tools (e.g. `http_request`, `browser`) are available in the same package:
 
 ```python
-from strands_tools import calculator, current_time, http_request, browser
+from strands_tools import calculator, current_time
+# Also available: http_request, browser, file_read, ...
 ```
 
 When adding tools, consider if they should be:

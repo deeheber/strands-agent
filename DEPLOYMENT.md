@@ -31,7 +31,7 @@ BEDROCK_MODEL_ID=us.amazon.titan-text-express-v1
 ## Local Testing
 
 ```bash
-cd agent && source .venv/bin/activate && pip install -e ".[dev]"
+cd agent && python3.13 -m venv .venv && source .venv/bin/activate && pip install -e ".[dev]"
 python src/agentcore_app.py
 
 # Test in another terminal
@@ -42,7 +42,7 @@ curl -X POST http://localhost:8080/invocations -H "Content-Type: application/jso
 
 ```bash
 cd cdk && cdk bootstrap  # First time only
-npm install && npm run build && cdk deploy
+npm install && npm run cdk:deploy
 ```
 
 **Duration**: 5-10 minutes. Creates AgentCore Runtime, ECR image, IAM roles.
@@ -58,7 +58,7 @@ RUNTIME_ARN="<your-runtime-arn>"
 aws bedrock-agentcore invoke-agent-runtime --agent-runtime-arn $RUNTIME_ARN --qualifier DEFAULT --payload $(echo '{"prompt": "What is 42 * 137?"}' | base64) response.json
 ```
 
-**AWS Console:** Bedrock AgentCore → Test → Agent Sandbox → `StrandsAgentStack_StrandsAgent` → Enter input promot and hit run
+**AWS Console:** Bedrock AgentCore → Test → Agent Sandbox → `StrandsAgentStack_StrandsAgent` → Enter input prompt and hit run
 
 **Sample queries:**
 
@@ -95,7 +95,7 @@ def my_tool(param: str) -> str:
 from .my_tools import my_tool
 __all__ = ["letter_counter", "my_tool"]
 
-# Community tools
+# Optional: additional community tools available in strands-agents-tools
 from strands_tools import http_request, file_read
 ```
 

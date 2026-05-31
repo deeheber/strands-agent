@@ -32,7 +32,7 @@ BEDROCK_MODEL_ID=us.amazon.titan-text-express-v1
 
 ```bash
 cd agent && uv sync --extra dev
-uv run python src/agentcore_app.py
+uv run src/agentcore_app.py
 
 # Test in another terminal
 curl -X POST http://localhost:8080/invocations -H "Content-Type: application/json" -d '{"prompt": "What is 42 * 137?"}'
@@ -79,7 +79,7 @@ aws logs tail /aws/bedrock-agentcore/runtimes/StrandsAgentStack_StrandsAgent-<id
 
 1. **Edit** `agent/src/agentcore_app.py` or add tools in `agent/src/tools/`
 2. **Quality check** `cd agent && ./quality-check.sh`
-3. **Test locally** `uv run python src/agentcore_app.py`
+3. **Test locally** `uv run src/agentcore_app.py`
 4. **Deploy** `cd cdk && npm run build && cdk deploy`
 
 **Adding Tools:**

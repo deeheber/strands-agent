@@ -26,7 +26,7 @@ Prerequisite: [install](https://docs.aws.amazon.com/cli/latest/userguide/getting
 
 ```bash
 # Test locally
-cd agent && uv sync --extra dev && uv run python src/agentcore_app.py
+cd agent && uv sync --extra dev && uv run src/agentcore_app.py
 # Test in another terminal
 curl -X POST http://localhost:8080/invocations -H "Content-Type: application/json" -d '{"prompt": "What is 42 * 137?"}'
 

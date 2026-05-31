@@ -42,7 +42,7 @@ jobs:
         run: npm test
 
       - name: configure AWS credentials from OIDC
-        uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5
+        uses: aws-actions/configure-aws-credentials@99214aa6889fcddfa57764031d71add364327e59 # v6
         with:
           # 15 minutes aka shortest time allowed
           role-duration-seconds: 900

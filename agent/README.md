@@ -6,7 +6,7 @@ Python 3.13 agent with calculator, time, and letter counter tools.
 
 ```bash
 uv sync --extra dev
-uv run --env-file .env src/agentcore_app.py
+uv run src/agentcore_app.py
 
 # Test in another terminal
 curl -X POST http://localhost:8080/invocations -H "Content-Type: application/json" -d '{"prompt": "What is 42 * 137?"}'
@@ -14,15 +14,12 @@ curl -X POST http://localhost:8080/invocations -H "Content-Type: application/jso
 
 ## Configuration
 
-**Environment Variables**: Use the `--env-file` flag to load variables from a `.env` file (e.g., `uv run --env-file .env src/agentcore_app.py`).
+**Environment Variables**: To load variables from a `.env` file, use the `--env-file` flag:
 
 ```bash
-# Copy the example and customize
 cp .env.example .env
-
-# Edit .env file
-BEDROCK_MODEL_ID=your-preferred-model-id
-LOG_LEVEL=DEBUG
+# Edit .env with your configuration
+uv run --env-file .env src/agentcore_app.py
 ```
 
 **Model**: Set `BEDROCK_MODEL_ID` environment variable (see `DEFAULT_MODEL_ID` in `src/agentcore_app.py` for current default)

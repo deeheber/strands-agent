@@ -5,8 +5,8 @@ Python 3.13 agent with calculator, time, and letter counter tools.
 ## Quick Start
 
 ```bash
-python3.13 -m venv .venv && source .venv/bin/activate && pip install -e ".[dev]"
-python src/agentcore_app.py
+uv sync --extra dev
+uv run python src/agentcore_app.py
 
 # Test in another terminal
 curl -X POST http://localhost:8080/invocations -H "Content-Type: application/json" -d '{"prompt": "What is 42 * 137?"}'
@@ -39,7 +39,7 @@ def get_agent() -> Agent:
     return Agent(tools=[calculator, current_time, letter_counter])
 ```
 
-Additional tools (e.g. `http_request`, `file_read`) are available from `strands-agents-tools` — import any you want and add them to the `tools=[...]` list.
+Additional tools (e.g. `http_request`, `file_read`) are available from `strands-agents-tools` -- import any you want and add them to the `tools=[...]` list.
 
 **Custom Tools:**
 
@@ -58,8 +58,8 @@ __all__ = ["letter_counter", "my_tool"]
 ## Development
 
 ```bash
-./quality-check.sh    # All quality checks (recommended)
-pytest               # Tests only
+./quality-check.sh        # All quality checks (recommended)
+uv run pytest             # Tests only
 ```
 
 See [DEPLOYMENT.md](../DEPLOYMENT.md) for cloud deployment.

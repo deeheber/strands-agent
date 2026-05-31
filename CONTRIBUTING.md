@@ -7,6 +7,7 @@ Thank you for your interest in contributing to the Strands Agent Template! This 
 ### Prerequisites
 
 - **Python 3.13** (see `.python-version`)
+- **[uv](https://docs.astral.sh/uv/)** (Python package manager)
 - **Node.js 24** (see `.nvmrc`)
 - **Docker** (for deployment)
 - **AWS CLI** configured with appropriate permissions
@@ -25,9 +26,7 @@ Thank you for your interest in contributing to the Strands Agent Template! This 
 
    ```bash
    cd agent
-   python3.13 -m venv .venv
-   source .venv/bin/activate
-   pip install -e ".[dev]"
+   uv sync --extra dev
    ```
 
 3. **Set up the CDK environment**
@@ -52,8 +51,7 @@ Thank you for your interest in contributing to the Strands Agent Template! This 
 
 ```bash
 cd agent
-source .venv/bin/activate
-python src/agentcore_app.py
+uv run python src/agentcore_app.py
 ```
 
 **Quality checks (recommended before committing):**
@@ -65,7 +63,7 @@ python src/agentcore_app.py
 **Manual quality validation:**
 
 ```bash
-pytest && mypy src/ && ruff check --fix . && black .
+uv run pytest && uv run mypy src/ && uv run ruff check --fix . && uv run black .
 ```
 
 ### CDK Infrastructure Development

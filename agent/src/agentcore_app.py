@@ -21,7 +21,7 @@ if os.path.exists(".env"):
 
         warnings.warn(
             ".env file found but python-dotenv not installed. "
-            "Install with: pip install python-dotenv",
+            "Install with: uv add python-dotenv",
             UserWarning,
             stacklevel=2,
         )

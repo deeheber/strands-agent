@@ -1,13 +1,20 @@
 FROM public.ecr.aws/docker/library/python:3.13-slim
 
+COPY --from=ghcr.io/astral-sh/uv:0.11 /uv /uvx /bin/
+
 WORKDIR /app
 
-COPY pyproject.toml ./
-RUN pip install --no-cache-dir . && \
+ENV UV_COMPILE_BYTECODE=1
+ENV UV_LINK_MODE=copy
+
+COPY pyproject.toml uv.lock ./
+RUN uv sync --locked --no-dev --no-editable && \
     useradd -m -u 1000 appuser && \
     chown -R appuser:appuser /app
 
 COPY --chown=appuser:appuser src/ .
+
+ENV PATH="/app/.venv/bin:$PATH"
 
 USER appuser
 

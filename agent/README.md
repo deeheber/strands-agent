@@ -6,7 +6,7 @@ Python 3.13 agent with calculator, time, and letter counter tools.
 
 ```bash
 uv sync --extra dev
-uv run src/agentcore_app.py
+uv run --env-file .env src/agentcore_app.py
 
 # Test in another terminal
 curl -X POST http://localhost:8080/invocations -H "Content-Type: application/json" -d '{"prompt": "What is 42 * 137?"}'
@@ -14,7 +14,7 @@ curl -X POST http://localhost:8080/invocations -H "Content-Type: application/jso
 
 ## Configuration
 
-**Environment Variables**: `uv run` automatically loads environment variables from a `.env` file when running locally, so no separate dotenv package is needed.
+**Environment Variables**: Use the `--env-file` flag to load variables from a `.env` file (e.g., `uv run --env-file .env src/agentcore_app.py`).
 
 ```bash
 # Copy the example and customize

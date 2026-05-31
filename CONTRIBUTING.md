@@ -51,7 +51,7 @@ Thank you for your interest in contributing to the Strands Agent Template! This 
 
 ```bash
 cd agent
-uv run src/agentcore_app.py
+uv run --env-file .env src/agentcore_app.py
 ```
 
 **Quality checks (recommended before committing):**

@@ -5,7 +5,7 @@ Python 3.13 agent with calculator, time, and letter counter tools.
 ## Quick Start
 
 ```bash
-uv sync --extra dev
+uv sync
 uv run src/agentcore_app.py
 
 # Test in another terminal

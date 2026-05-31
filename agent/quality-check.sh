@@ -13,7 +13,7 @@ fi
 
 # Install/sync dependencies
 echo "📦 Syncing dependencies..."
-uv sync --locked --extra dev
+uv sync --locked
 
 # Run quality checks
 echo "🧪 Running tests..."

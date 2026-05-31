@@ -31,7 +31,7 @@ BEDROCK_MODEL_ID=us.amazon.titan-text-express-v1
 ## Local Testing
 
 ```bash
-cd agent && uv sync --extra dev
+cd agent && uv sync
 uv run src/agentcore_app.py
 
 # Test in another terminal

@@ -26,7 +26,7 @@ Thank you for your interest in contributing to the Strands Agent Template! This 
 
    ```bash
    cd agent
-   uv sync --extra dev
+   uv sync
    ```
 
 3. **Set up the CDK environment**

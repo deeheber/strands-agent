@@ -9,7 +9,7 @@ ENV UV_COMPILE_BYTECODE=1
 ENV UV_LINK_MODE=copy
 
 COPY pyproject.toml uv.lock ./
-RUN uv sync --locked --no-dev --no-editable && \
+RUN uv sync --locked --no-dev --no-install-project && \
     useradd -m -u 1000 appuser && \
     chown -R appuser:appuser /app
 

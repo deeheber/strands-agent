@@ -32,13 +32,13 @@
     "eslint-config-prettier": "^10.1.8",
     "prettier": "^3.8.1",
     "tsx": "^4.21.0",
-    "typescript": "~5.9.3",
+    "typescript": "~6.0.3",
     "typescript-eslint": "^8.55.0",
     "vitest": "^4.0.18"
   },
   "dependencies": {
-    "@aws-cdk/aws-bedrock-agentcore-alpha": "~2.238.0-alpha.0",
-    "aws-cdk-lib": "2.238.0",
+    "@aws-cdk/aws-bedrock-agentcore-alpha": "~2.257.0-alpha.0",
+    "aws-cdk-lib": "2.257.0",
     "constructs": "^10.4.5",
     "zod": "^4.3.6"
   }

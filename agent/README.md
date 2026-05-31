@@ -14,7 +14,7 @@ curl -X POST http://localhost:8080/invocations -H "Content-Type: application/jso
 
 ## Configuration
 
-**Environment Variables**: The agent automatically loads environment variables from a `.env` file when running locally (requires `python-dotenv` from dev dependencies).
+**Environment Variables**: `uv run` automatically loads environment variables from a `.env` file when running locally, so no separate dotenv package is needed.
 
 ```bash
 # Copy the example and customize

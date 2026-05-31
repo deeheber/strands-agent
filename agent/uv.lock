@@ -2658,7 +2658,6 @@ dev = [
     { name = "black" },
     { name = "mypy" },
     { name = "pytest" },
-    { name = "python-dotenv" },
     { name = "ruff" },
 ]
 
@@ -2670,7 +2669,6 @@ requires-dist = [
     { name = "boto3", specifier = ">=1.42.32" },
     { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.19.1" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=9.0.2" },
-    { name = "python-dotenv", marker = "extra == 'dev'", specifier = ">=1.2.1" },
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.14.13" },
     { name = "strands-agents", extras = ["otel"], specifier = ">=1.23.0" },
     { name = "strands-agents-tools", specifier = ">=0.2.19" },

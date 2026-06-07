@@ -6,21 +6,21 @@ build-backend = "hatchling.build"
 name = "strands-agent"
 version = "1.0.0"
 description = "A Strands AI agent"
-requires-python = ">=3.13"
+requires-python = ">=3.14"
 dependencies = [
-    "strands-agents[otel]>=1.41.0",
-    "strands-agents-tools>=0.7.0",
-    "bedrock-agentcore>=1.12.0",
-    "aws-opentelemetry-distro>=0.17.1",
-    "boto3>=1.43.18"
+    "strands-agents[otel]~=1.41",
+    "strands-agents-tools~=0.7.0",
+    "bedrock-agentcore~=1.12",
+    "aws-opentelemetry-distro~=0.17.1",
+    "boto3~=1.43"
 ]
 
 [dependency-groups]
 dev = [
-    "pytest>=9.0.3",
-    "ruff>=0.15.15",
-    "mypy>=2.1.0",
-    "black>=26.5.1",
+    "pytest~=9.0",
+    "ruff~=0.15.15",
+    "mypy~=2.1",
+    "black~=26.5",
 ]
 
 [tool.uv]
@@ -31,10 +31,10 @@ packages = ["src"]
 
 [tool.black]
 line-length = 100
-target-version = ["py313"]
+target-version = ["py314"]
 
 [tool.mypy]
-python_version = "3.13"
+python_version = "3.14"
 strict = true
 warn_return_any = true
 warn_unused_configs = true
@@ -48,7 +48,7 @@ pythonpath = ["src"]
 
 [tool.ruff]
 line-length = 100
-target-version = "py313"
+target-version = "py314"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "N", "W", "UP"]

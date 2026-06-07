@@ -23,6 +23,9 @@ dev = [
     "black>=26.5.1",
 ]
 
+[tool.uv]
+required-version = "~=0.11.0"
+
 [tool.hatch.build.targets.wheel]
 packages = ["src"]
 

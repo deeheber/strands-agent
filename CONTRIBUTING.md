@@ -6,7 +6,7 @@ Thank you for your interest in contributing to the Strands Agent Template! This 
 
 ### Prerequisites
 
-- **Python 3.13** (see `.python-version`)
+- **Python 3.14** (see `.python-version`)
 - **[uv](https://docs.astral.sh/uv/)** (Python package manager)
 - **Node.js 24** (see `.nvmrc`)
 - **Docker** (for deployment)

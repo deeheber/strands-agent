@@ -6,7 +6,7 @@ Deploy Strands agent to AWS Bedrock AgentCore Runtime.
 
 - AWS CLI configured (`aws configure`)
 - Docker running
-- Node.js 24, Python 3.13, [uv](https://docs.astral.sh/uv/)
+- Node.js 24, Python 3.14, [uv](https://docs.astral.sh/uv/)
 - Bedrock model access enabled
 - **For CI/CD**: GitHub Actions OIDC setup (see below)
 
